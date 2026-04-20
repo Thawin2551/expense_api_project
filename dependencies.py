@@ -19,8 +19,8 @@ async def get_current_user(token: str = Depends(oAuth2_scheme)):
         if user_id is None:
             raise HTTPException(status_code=401, detail="Invalid Token. Please try again")
     except jwt.PyJWTError as e:
-        # พิมพ์ Error ตัวจริงออกมาดูที่ Terminal สีดำๆ ของคุณ
-        print(f"🚨 JWT Decode Error: {e}") 
+        # Debug Jwt Decode
+        print(f"JWT Decode Error: {e}") 
         
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
