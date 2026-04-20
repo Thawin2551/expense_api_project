@@ -32,3 +32,8 @@ class TransactionWithMessageResponse(BaseModel):
     messages: str # Display string like a UserWithMessageResponse
     transaction: TransactionResponse
     model_config = ConfigDict(from_attributes=True)
+
+class TransactionSummaryResponse(BaseModel):
+    total_income: float
+    total_expense: float
+    net_balance: float

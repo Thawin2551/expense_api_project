@@ -20,11 +20,11 @@ async def get_transaction_by_month(user_id: int, month: int = None, year: int = 
             "less_than_equal": end_date
         }
     
-        return await prisma.transaction.find_many(
-            where=where_userId,
-            include={"user": True, "category": True},
-            order={"date": "desc"}
-        )
+    return await prisma.transaction.find_many(
+        where=where_userId,
+        include={"user": True, "category": True},
+        order={"date": "desc"}
+    )
 
 
 # GET transaction summary
@@ -43,27 +43,27 @@ async def get_transaction_summary(user_id: int, month: int = None, year: int = N
             "less_than_equal": end_date
         }   
 
-        summary_data = await prisma.transaction.group_by(
-            by=["type"],
-            sum={"amount": True}, # sum all amount in that month and year
-            where=where_userId,
-        )
+    summary_data = await prisma.transaction.group_by(
+        by=["type"],
+        sum={"amount": True}, # sum all amount in that month and year
+        where=where_userId,
+    )
 
-        # define income and expense start with 0
-        total_income = 0
-        total_expense = 0
+    # define income and expense start with 0
+    total_income = 0
+    total_expense = 0
 
-        for item in summary_data:
-            if item["type"] == "income":
-                total_income = item.get("_sum", {}).get("amount", 0) or 0
-            elif item["type"] == "expense":
-                total_expense = item.get("_sum", {}).get("amount", 0) or 0
-        
-        return {
-            "total_income": total_income,
-            "total_expense": total_expense,
-            "net_balance": total_income - total_expense # income - expense we will get all money that remain
-        }
+    for item in summary_data:
+        if item["type"] == "income":
+            total_income = item.get("_sum", {}).get("amount", 0) or 0
+        elif item["type"] == "expense":
+            total_expense = item.get("_sum", {}).get("amount", 0) or 0
+    
+    return {
+        "total_income": total_income,
+        "total_expense": total_expense,
+        "net_balance": total_income - total_expense # income - expense we will get all money that remain
+    }
 
 # POST
 async def create_transaction(transaction_create: TransactionCreate, user_id: int):

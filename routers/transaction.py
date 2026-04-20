@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from crud import transaction as crud_transaction
 from schemas.user import User
-from schemas.transaction import TransactionBase, TransactionCreate, TransactionResponse, TransactionWithMessageResponse, TransactionUpdate
+from schemas.transaction import TransactionBase, TransactionCreate, TransactionResponse, TransactionWithMessageResponse, TransactionUpdate, TransactionSummaryResponse
 from dependencies import get_current_user
 from typing import List, Optional # send back data as list type to user
 
@@ -11,7 +11,7 @@ router = APIRouter(
 )
 
 # GET summary transaction this function must be on-top of all function to prevent error
-@router.get("/summary")
+@router.get("/summary", response_model=TransactionSummaryResponse)
 async def get_transaction_summary(month: Optional[int] = None, year: Optional[int] = None, current_user: User = Depends(get_current_user)):
     summary = await crud_transaction.get_transaction_summary(
         user_id=current_user.id,
